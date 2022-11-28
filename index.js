@@ -40,6 +40,22 @@ app.get("/all", (req, res) => {
   return res.status(200).json(dataBase);
 });
 
+//Acessar um rpocesso pelo id  /process/:id
+app.get("/process/:id", (req, res) => {
+  //Pegar o id do processo
+  const { id } = req.params;
+
+  const findProcess = dataBase.find((process) => process.id === id);
+
+  return res.status(200).json(findProcess);
+});
+
+//Acessar todos os processos em andamento /status/open
+app.get("/status/open");
+
+//Acessar todos os processos finalizados /status/close
+app.get("/status/close");
+
 //POST
 app.post("/create", (req, res) => {
   //Criar um processo no banco de dados
