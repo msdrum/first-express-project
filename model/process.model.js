@@ -42,3 +42,7 @@ const processSchema = new Schema({
     lowercase: true,
   },
 });
+
+const ProcessModel = model("Process", processSchema);
+
+export default ProcessModel;
