@@ -1,5 +1,6 @@
 import express, { application } from "express";
 import * as dotenv from "dotenv";
+import connect from "./config/db.config.js";
 import processRoute from "./routes/process.routes.js";
 
 //habilitar o servidor a ter variáveis de ambiente
@@ -10,6 +11,9 @@ const app = express();
 
 //configurar o servidor para aceitar enviar e receber arquivos em JSON
 app.use(express.json());
+
+//Conectando com o Banco de Dados
+connect();
 
 app.use("/process", processRoute);
 
