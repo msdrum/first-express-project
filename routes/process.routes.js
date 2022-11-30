@@ -25,7 +25,9 @@ const dataBase = [
   },
 ];
 
-//CREAT MONGODB
+//CRIAÇÃO DAS ROTAS
+
+//CREATE MONGODB
 processRoute.post("/create-process", async (req, res) => {
   try {
     const form = req.body;
@@ -41,9 +43,7 @@ processRoute.post("/create-process", async (req, res) => {
   }
 });
 
-//CRIAÇÃO DAS ROTAS
-
-//GET
+//GET ALL PROCESSES
 processRoute.get("/all-processes", async (req, res) => {
   //Pegar todos os processos no banco de dados e excluindo os campos __v e updatedAt
   try {
@@ -61,47 +61,67 @@ processRoute.get("/all-processes", async (req, res) => {
   }
 });
 
-//Acessar um rpocesso pelo id  /process/:id
-processRoute.get("/process/:id", (req, res) => {
-  //Pegar o id do processo
-  const { id } = req.params;
+// GET ONE PROCESS
 
-  const findProcess = dataBase.find((process) => process.id === id);
+processRoute.get("/one-process/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const process = await ProcessModel.findById(id);
+    // tratando excessões
 
-  return res.status(200).json(findProcess);
-});
+    if (!process) {
+      return res.status(500).json({ msg: "Processo não encontrado!" });
+    }
 
-//Acessar todos os processos em andamento /status/open
-processRoute.get("/status/open");
-
-//Acessar todos os processos finalizados /status/close
-processRoute.get("/status/close");
-
-//POST
-processRoute.post("/create", (req, res) => {
-  //Criar um processo no banco de dados
-  console.log(req.body);
-
-  const form = req.body;
-
-  dataBase.push(form);
-
-  return res.status(201).json(dataBase);
+    return res.status(200).json(process);
+  } catch (error) {
+    return res.status(500).json(error.errors);
+  }
 });
 
 //DELETE
-processRoute.delete("/delete/:id", (req, res) => {
+processRoute.delete("/delete/:id", async (req, res) => {
   //Encontrar o id a ser deletado através do index
-  const { id } = req.params;
+  try {
+    const { id } = req.params;
+
+    const deletedProcess = await ProcessModel.findByIdAndDelete(id);
+
+    if (!deletedProcess) {
+      return res.status(500).json({ msg: "Processo não encontrado!" });
+    }
+
+    return res.status(200).json(deletedProcess);
+  } catch (error) {
+    return res.status(500).json(error.errors);
+  }
 
   //Entontrando o item com o mesmo id passado no req.params
-  const deleteId = dataBase.find((item) => item.id === id);
+  // const { id } = req.params;
+  // const deleteId = dataBase.find((item) => item.id === id);
   //Encontrando a posição do item no index
-  const index = dataBase.indexOf(deleteId);
+  // const index = dataBase.indexOf(deleteId);
   //Retirando o item do array
-  dataBase.splice(index, 1);
+  // dataBase.splice(index, 1);
 
-  return res.status(200).json(dataBase);
+  // return res.status(200).json(dataBase);
+});
+
+//EDIT (PUT)
+processRoute.put("/edit/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const updatedProcess = await ProcessModel.findByIdAndUpdate(
+      id,
+      { ...req.body },
+      { new: true, runValidators: true }
+    );
+
+    return res.status(200).json(updatedProcess);
+  } catch (error) {
+    return res.status(500).json(error.errors);
+  }
 });
 
 export default processRoute;
