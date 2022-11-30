@@ -70,7 +70,7 @@ processRoute.get("/one-process/:id", async (req, res) => {
     // tratando excessões
 
     if (!process) {
-      return res.status(500).json({ msg: "Processo não encontrado!" });
+      return res.status(400).json({ msg: "Processo não encontrado!" });
     }
 
     return res.status(200).json(process);
@@ -88,7 +88,7 @@ processRoute.delete("/delete/:id", async (req, res) => {
     const deletedProcess = await ProcessModel.findByIdAndDelete(id);
 
     if (!deletedProcess) {
-      return res.status(500).json({ msg: "Processo não encontrado!" });
+      return res.status(400).json({ msg: "Processo não encontrado!" });
     }
 
     return res.status(200).json(deletedProcess);

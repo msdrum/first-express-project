@@ -13,7 +13,7 @@ const processSchema = new Schema(
       type: String,
       required: true,
       minLength: 2,
-      maxLength: 10,
+      maxLength: 20,
       trim: true,
       lowercase: true,
     },
