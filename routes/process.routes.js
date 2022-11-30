@@ -44,10 +44,21 @@ processRoute.post("/create-process", async (req, res) => {
 //CRIAÇÃO DAS ROTAS
 
 //GET
-processRoute.get("/all", (req, res) => {
-  //Pegar todos os processos no banco de dados
+processRoute.get("/all-processes", async (req, res) => {
+  //Pegar todos os processos no banco de dados e excluindo os campos __v e updatedAt
+  try {
+    //find vazio -> traz todas as ocorrências
+    //projection -> define os campos que vão ser retornados
+    //sort -> ordena o retorno dos dados (1 ou -1)
+    const processes = await ProcessModel.find(
+      {},
+      { __v: 0, updatedAt: 0 }
+    ).sort({ documentName: 1 });
 
-  return res.status(200).json(dataBase);
+    return res.status(200).json(processes);
+  } catch (error) {
+    return res.status(500).json(error.errors);
+  }
 });
 
 //Acessar um rpocesso pelo id  /process/:id
