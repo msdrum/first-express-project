@@ -1,4 +1,6 @@
 import express from "express";
+//importando o banco de dados
+import ProcessModel from "../model/process.model.js";
 
 const processRoute = express.Router();
 
@@ -22,6 +24,22 @@ const dataBase = [
     setor: "enap",
   },
 ];
+
+//CREAT MONGODB
+processRoute.post("/create-process", async (req, res) => {
+  try {
+    const form = req.body;
+
+    const newProcess = await ProcessModel.create(form);
+
+    return res.status(201).json(newProcess);
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ msg: "Algo deu errado na criação do processo." });
+  }
+});
 
 //CRIAÇÃO DAS ROTAS
 

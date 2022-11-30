@@ -23,7 +23,7 @@ const processSchema = new Schema(
       lowercase: true,
     },
     dateInit: {
-      type: Date,
+      type: String,
       required: true,
     },
     comments: [
@@ -32,7 +32,7 @@ const processSchema = new Schema(
       },
     ],
     dateEnd: {
-      type: Date,
+      type: String,
     },
     setor: {
       type: String,
